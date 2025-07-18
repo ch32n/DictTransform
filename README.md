@@ -740,3 +740,246 @@ set dict1 {
 #returns {data {x {y 1} a {b 3}}}
 templateExample::ParseEx1 $dict1
 ```
+
+### Complex example
+```tcl
+package require dicttransform
+
+set junosParse(%tmplt_bgp-rib_pre%) {
+    from bgp-rib {
+        key {name -> index {0 1}}
+        from name                    {get {data}}
+        from total-prefix-count      {get {data}}
+        from active-prefix-count     {get {data}}
+        from received-prefix-count   {get {data}}
+        from accepted-prefix-count   {get {data}}
+        from suppressed-prefix-count {get {data}}
+    }
+}
+
+set junosParse(%tmplt_bgp-rib%) {
+    from bgp-rib {
+        foreachkey {
+            get {
+                {name data -> alias name}
+                {total-prefix-count      data -> alias total-prefix-count}
+                {active-prefix-count     data -> alias active-prefix-count}
+                {received-prefix-count   data -> alias received-prefix-count}
+                {accepted-prefix-count   data -> alias accepted-prefix-count}
+                {suppressed-prefix-count data -> alias suppressed-prefix-count}
+            }
+        }
+    }    
+}
+
+set junosParse(bgp_peer_pre) {
+    from bgp-information {
+        from bgp-peer {
+            key {peer-id -> index {0 1}}
+            
+            from peer-address {get {data}}
+            from peer-as {get {data}}
+            from local-address {get {data}}
+            from local-as {get {data}}
+            from description {get {data}}
+            from peer-group {get {data}}
+            from peer-cfg-rti {get {data}}
+            from peer-fwd-rti {get {data}}
+            from peer-type {get {data}}
+            from peer-state {get {data}}
+            from peer-id {get {data}}
+            from local-id {get {data}}
+            from nlri-type-peer {get {data}}
+            
+            %tmplt_bgp-rib_pre%
+        }
+        from attributes {
+            return
+        }
+    }
+}
+
+set junosParse(bgp_peer) {
+    transform bgp_peer_pre
+    
+    from {bgp-information bgp-peer -> alias bgp-peer} {
+        foreachkey {
+            get {
+                {peer-address data -> alias peer-address}
+                {peer-as data -> alias peer-as}
+                {local-address data -> alias local-address}
+                {local-as data -> alias local-as}
+                {description data -> alias description}
+                {peer-group data -> alias peer-group}
+                {peer-cfg-rti data -> alias vrf}
+                {peer-fwd-rti data -> alias peer-fwd-rti}
+                {peer-type data -> alias peer-type}
+                {peer-state data -> alias peer-state}
+                {peer-id data -> alias peer-id}
+                {nlri-type-peer data -> alias nlri-type-peer}
+            }
+            
+            %tmplt_bgp-rib%
+        }
+    }
+}
+
+dicttr::create_interface junosParse
+
+
+
+set junosData {
+bgp-information {
+    {
+        bgp-peer {
+            {
+                attributes {junos:style detail} 
+                peer-address {{data 168.168.1.1+13071}} 
+                peer-as {{data 20545}} 
+                local-address {{data 168.168.1.20+179}} 
+                local-as {{data 16010}} 
+                description {{data {### CLIENT_EBGP ###}}} 
+                peer-group {{data EBGP-PEER-CLIENT}} 
+                peer-cfg-rti {{data INET}} 
+                peer-fwd-rti {{data INET}} 
+                peer-type {{data External}} 
+                peer-state {{data Established}} 
+                peer-flags {{data {Sync RSync}}} 
+                rsync-flags {{data SocketReplicated}} 
+                last-state {{data EstabSync}} 
+                last-event {{data RsyncAck}} 
+                last-error {{data Cease}} 
+                bgp-option-information {
+                    {
+                        export-policy {{data pol-peer-CLIENT-export}} 
+                        import-policy {{data pol-peer-CLIENT-import}} 
+                        bgp-options {{data {RemovePrivateAS LogUpDown PeerAS Refresh}}} 
+                        bgp-options2 {{}} 
+                        bgp-options-extended {{data GracefulShutdownRcv}} 
+                        bgp-options-extended2 {{}} 
+                        holdtime {{data 90}} 
+                        preference {{data 170}} 
+                        gshut-recv-local-preference {{data 0}}
+                    }
+                }
+                flap-count {{data 2}} 
+                last-flap-event {{data InterfaceAddrDeleted}} 
+                last-unreplicate-event {{data {Peer went down}}} 
+                recv-ebgp-origin-validation-state {{data Reject}} 
+                bgp-error {
+                    {
+                        name {{data Cease}} 
+                        send-count {{data 2}} 
+                        receive-count {{data 0}}
+                    }
+                } 
+                peer-id {{data 192.168.30.1}} 
+                local-id {{data 10.201.254.1}} 
+                active-holdtime {{data 90}} 
+                keepalive-interval {{data 30}} 
+                group-index {{data 60}} 
+                peer-index {{data 0}} 
+                snmp-index {{data 160}} 
+                bgp-peer-iosession {
+                    {
+                        iosession-thread-name {{data bgpio-0}} 
+                        iosession-state {{data Enabled}}
+                    }
+                } 
+                bgp-bfd {
+                    {
+                        bfd-configuration-state {{data disabled}} 
+                        bfd-operational-state {{data down}}
+                    }
+                } 
+                local-interface-name {{data xe-7/1/16.0}} 
+                local-interface-index {{data 1525}} 
+                peer-restart-nlri-configured {{data inet-unicast}} 
+                nlri-type-peer {{data inet-unicast}} 
+                nlri-type-session {{data inet-unicast}} 
+                peer-refresh-capability {{data 2}}
+                peer-stale-route-time-configured {{data 300}} 
+                peer-no-restart {{data null}} 
+                peer-restart-nlri-negotiated {{}}
+                peer-end-of-rib-received {{data inet-unicast}} 
+                peer-end-of-rib-sent {{data inet-unicast}}
+                peer-end-of-rib-scheduled {{}}
+                peer-no-helper {{data null}} 
+                peer-no-llgr-helper {{data null}} 
+                peer-4byte-as-capability-advertised {{data 20545}}
+                peer-addpath-not-supported {{data null}}
+                bgp-rib {
+                    {
+                        attributes {junos:style detail} 
+                        name {{data INET.inet.0}}
+                        rib-bit {{data 180001}} 
+                        bgp-rib-state {{data {BGP restart is complete}}} 
+                        vpn-rib-state {{data {VPN restart is complete}}} 
+                        send-state {{data {in sync}}}
+                        active-prefix-count {{data 10}} 
+                        received-prefix-count {{data 10}} 
+                        accepted-prefix-count {{data 10}} 
+                        suppressed-prefix-count {{data 0}} 
+                        advertised-prefix-count {{data 194}}
+                    }
+                }
+                last-received {{data 13}} 
+                last-sent {{data 19}} 
+                last-checked {{data 7390919}} 
+                input-messages {{data 268719}} 
+                input-updates {{data 30}} 
+                input-refreshes {{data 0}} 
+                input-octets {{data 5106716}} 
+                output-messages {{data 253216}} 
+                output-updates {{data 494}} 
+                output-refreshes {{data 0}} 
+                output-octets {{data 4825389}} 
+                bgp-output-queue {
+                    {
+                        number {{data 23}} 
+                        count {{data 0}} 
+                        table-name {{data INET.inet.0}} 
+                        rib-adv-nlri {{data inet-unicast}}
+                    }
+                }
+            }
+        }
+    }
+}    
+}
+
+
+
+junosParse::bgp_peer $junosData
+
+
+#Result
+set Result {
+bgp-peer {
+    192.168.30.1 {
+        peer-address 168.168.1.1+13071 
+        peer-as 20545 
+        local-address 168.168.1.20+179 
+        local-as 16010 
+        description {### CLIENT_EBGP ###} 
+        peer-group EBGP-PEER-CLIENT 
+        vrf INET 
+        peer-fwd-rti INET 
+        peer-type External 
+        peer-state Established 
+        peer-id 192.168.30.1 
+        nlri-type-peer inet-unicast 
+        bgp-rib {
+            INET.inet.0 {
+                name INET.inet.0 
+                total-prefix-count {} 
+                active-prefix-count 10 
+                received-prefix-count 10 
+                accepted-prefix-count 10 
+                suppressed-prefix-count 0
+            }
+        }
+    }
+}
+}
+```
