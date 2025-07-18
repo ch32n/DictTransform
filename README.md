@@ -16,10 +16,11 @@ package require dicttransform
 
 ## Command Reference
 
-### `::dicttr::create_interface array_name ?-staticvars {Var1 Val1 Var2 Val2 ...}?`
+#### `::dicttr::create_interface array_name ?-staticvars {Var1 Val1 Var2 Val2 ...}?`
 
 This command creates procedures for all the definitions specified in the array variable name.
 The name of that array becomes a namespace containing the defined commands.
+
 `-staticvars` creates mapping for variables, which can be referenced in `command` definition.
 
 ### `get`
@@ -49,6 +50,7 @@ get {
 * `regexp`: Applies a regular expression `<pattern>` to the value and extracts the submatch at the specified `<index>`.
 * `script`: Executes a custom Tcl `<script-body>` to transform the value. `%v` is substituted with the key's value before execution.
 
+
 ### `from`
 
 Descends into a nested dictionary at the specified `<key-path-list>` and applies a new set of rules to it.
@@ -62,6 +64,7 @@ from {<key-path-list> -> include <1|0> alias <new-name>} {
 * `include`: If set to 0, the entire block is excluded from the output if the `<key-path-list>` does not exist. Defaults to 1.
 * `alias`: Renames the key in the output dictionary to `<new-name>`.
 
+
 ### `key`
 
 Reshapes a list of dictionaries into a key-value pair, using a specified value from within each item as its new key.
@@ -74,6 +77,7 @@ key ({<key-path-list> -> index <num>} | @arrayindex@)
 * `index`: If the value at `<key-path-list>` is a list, this specifies which element `<num>` to use as the key.
 * `@arrayindex@`: A special keyword that uses a simple incrementing integer as the key for each item, effectively converting a list to a dictionary with numeric keys.
 
+
 ### `foreachkey`
 
 Iterates over every key-value pair in the current dictionary context and applies a set of rules (`<definition>`) to each one.
@@ -84,6 +88,7 @@ foreachkey {
 }
 ```
 
+
 ### `flatten`
 
 Takes the dictionary value at `<key-path-list>` and merges its contents into the current dictionary level.
@@ -91,6 +96,7 @@ Takes the dictionary value at `<key-path-list>` and merges its contents into the
 ```
 flatten <list of key-path-list>
 ```
+
 
 ### `transform <transform-proc-list>`
 
@@ -100,6 +106,7 @@ Executes a pre-defined transformation procedure on the current dictionary before
 transform <transform-proc-list>
 ```
 
+
 ### `variable`
 
 Extracts a value from the source dictionary at `<key-path-list>` and stores it in a temporary variable named `<variable-name>`. This variable can then be referenced in subsequent command blocks as `@<variable-name>@`.
@@ -107,6 +114,7 @@ Extracts a value from the source dictionary at `<key-path-list>` and stores it i
 ```
 variable <variable-name> from <key-path-list>
 ```
+
 
 ### `command`
 
@@ -117,6 +125,7 @@ command <new-key-name> <tcl-command> {
     <definition>
 }
 ```
+
 
 ### `filter`
 
@@ -138,15 +147,18 @@ filter {
 * `include`: If set to 1 (default), processing continues if the filter matches. If set to 0, processing continues if the filter does not match.
 * `script`: A Tcl `<script-body>` that must return 1 (to pass) or 0 (to fail). `%v` is substituted with the key's value before execution.
 
+
 ### `return`
 
 Immediately halts processing for the current definition block and returns the dictionary in its current state. This is useful for fetching data with `command` without applying further parsing.
+
 
 ## Order of operation
 
 ```
 transform -> flatten -> filter -> return -> get -> from -> foreachkey -> command
 ```
+
 
 ## Templating
 
