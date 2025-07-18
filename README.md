@@ -835,9 +835,9 @@ bgp-information {
             {
                 attributes {junos:style detail} 
                 peer-address {{data 168.168.1.1+13071}} 
-                peer-as {{data 20545}} 
+                peer-as {{data 65002}} 
                 local-address {{data 168.168.1.20+179}} 
-                local-as {{data 16010}} 
+                local-as {{data 65001}} 
                 description {{data {### CLIENT_EBGP ###}}} 
                 peer-group {{data EBGP-PEER-CLIENT}} 
                 peer-cfg-rti {{data INET}} 
@@ -958,9 +958,9 @@ set Result {
 bgp-peer {
     192.168.30.1 {
         peer-address 168.168.1.1+13071 
-        peer-as 20545 
+        peer-as 65002 
         local-address 168.168.1.20+179 
-        local-as 16010 
+        local-as 65001 
         description {### CLIENT_EBGP ###} 
         peer-group EBGP-PEER-CLIENT 
         vrf INET 
