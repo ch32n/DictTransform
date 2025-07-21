@@ -98,7 +98,7 @@ flatten <list of key-path-list>
 ```
 
 
-### `transform <transform-proc-list>`
+### `transform`
 
 Executes a pre-defined transformation procedure on the current dictionary before any other rules in the current block are applied. This allows for multi-pass transformations.
 
